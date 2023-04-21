@@ -10,12 +10,20 @@ routes = APIRouter()
 @routes.get('/probando')
 def getTest():
     lista = ld('./document')
-    # for i in range(len(lista)):
-    #     with open(f'./document/{lista[i]}', 'rb') as f:
+    ids = []
+    for i in range(len(lista)):
+        with open(f'./document/{lista[i]}', 'rb') as f:
+            test = conn.local.files.insert_one({
+                "name": lista[i],
+                "data": f.read()
+            }).inserted_id
+            ids.append(str(test))
+            print(test)
+            test1 = conn.local.files.find_one({"_id": test})
+            print(test1)
 
     value = {
-        "name": "documentoX.PDF",
-        "id": ["13875943", '72452']
+        "id": ids,
     }
     
     headers = {
@@ -25,7 +33,8 @@ def getTest():
 
     print(f'Enviando {value}')
     response = requests.post("https://recive-production.up.railway.app/probando", headers=headers, json=value)
-    # requests.post(f'https://recive-production.up.railway.app/probando/${value.name}')
+    # response = requests.post("http://localhost:8001/probando", headers=headers, json=value)
+    
     return 'ok'
 
 @routes.post('/probando')
