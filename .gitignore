@@ -1,3 +1,5 @@
 /Send
 /__pycache__
 /**/__pycache__
+/.vscode
+/document/*.pdf
